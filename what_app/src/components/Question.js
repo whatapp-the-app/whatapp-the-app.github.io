@@ -36,7 +36,18 @@ function getAllMaxInMap(map) {
 function Question(props) {
     const [breadcrumb = "START", setBreadcrumb] = React.useState(props.breadcrumb);
     const breadcrumbs_list = breadcrumb.split(' ');
-    const [hasAnswer,setHasAnswer]= React.useState(false);
+
+    const [questions, setQuestions] = React.useState(props.questions);
+    const [currentQuestion, setCurrentQuestion] = React.useState(questions[0]);
+
+    const [communicators, setCommunicators] = React.useState(props.communicators);
+    const [communicatorScores, setCommunicatorScores] = React.useState(
+        new Map(communicators.map(obj => [obj, 0]))
+    );
+    const [bestFitCommunicators, setBestFitCommunicators] = React.useState(null);
+
+    const [currentText, setCurrentText] = React.useState(questions[0].TextField);
+    const [hasAnswer, setHasAnswer] = React.useState(false);
 
     function applyAnswer(ans) {
         let tempCommunicatorScores = new Map();
