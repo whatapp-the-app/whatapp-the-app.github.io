@@ -37,7 +37,6 @@ function Question(props){
 
     function checkIfHasAnswer(ans){
         
-        console.log(communicators);
         if(questions.length==1 || communicators.length ==1){
             localStorage.setItem("communicators",{communicators});
             setHasAnswer(true);

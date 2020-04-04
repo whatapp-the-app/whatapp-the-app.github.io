@@ -1,24 +1,44 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import firebase from '../firebase'
+import StarRatings from '../../node_modules/react-star-ratings';
+
+function StarRating(props){
+    return(
+        <StarRatings
+            rating={props.rating}
+            starDimension="40px"
+            starSpacing="15px"
+            />
+    );
+}
 
 function Answer(props){
-    const appId = props.appId;
     const [comments,setComments] = React.useState(null);
     const [communicators] = React.useState(props.communicators)
-
-    function getAllComments(){
-        firebase
-        .firestore().collection('comments').where("appId","==",{appId})
-        .onSnapshot((snapshot)=>{
-            const records = snapshot.docs.map((doc)=>({
-                id: doc.id,
-                ...doc.data()
-            }))
-            setComments(records);
+    const [hideButton,setHideButton] = React.useState(null)
+    const [ratings,setRatings]=React.useState([])
+    React.useMemo(()=>{
+        let tempRatings=[];
+        communicators.map((communicator,key)=>{
+            let grade=0;
+            firebase
+            .firestore().collection('comments').where("AppId","==",communicator.id)
+            .onSnapshot((snapshot)=>{
+                const records = snapshot.docs.map((doc)=>({
+                    id: doc.id,
+                    ...doc.data()
+                }))
+                records.forEach(record => {
+                    grade+=record.rating;
+                });
+                grade/=records.length;
+                tempRatings[key]=grade;
+        });
         })
-    }
-    function loadComments(appID){
-        console.log(appID)
+        setRatings(tempRatings);
+    },[])
+
+    function loadComments(appID,key){
         firebase
         .firestore().collection('comments').where("AppId","==",appID)
         .onSnapshot((snapshot)=>{
@@ -26,9 +46,13 @@ function Answer(props){
                 id: doc.id,
                 ...doc.data()
             }))
-            console.log(records)
+            setComments(records);
         })
+        setHideButton(key);
     }
+    const results=React.useMemo(()=>{
+        
+    })
 
     return(
         <div>
@@ -37,7 +61,12 @@ function Answer(props){
                 return (
                 <div key={key}>
                     <p>name: {communicator.name}</p>
-                    <button onClick={()=>loadComments(communicator.id)}>load comments</button>
+                    <StarRating rating={ratings[key]}/>
+                    {hideButton!=key && <button onClick={()=>loadComments(communicator.id,key)}>load comments</button>}
+                    {hideButton==key && comments != null && comments.map((comment,key2)=>{
+                        return(<p key={key2}>{comment.text}</p>)
+                    })}
+                    {hideButton==key && <button onClick={()=>setHideButton(null)}>hide comments</button>}
                 </div>)
             })}
         </div>
