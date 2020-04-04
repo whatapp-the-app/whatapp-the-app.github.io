@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import firebase from './firebase'
 import LandingPage from './components/LandingPage'
+import { AnswerContext } from './AnswerContext.js';
 
 function googleLogin(){
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -37,11 +38,15 @@ function addRecord(){
 }
 
 function App() {
+
+  const [hasAnswer, setHasAnswer] = React.useState(false);
+
   return (
     <div className="App">
       <header className="App-header">
-        
-        <LandingPage></LandingPage>
+        <AnswerContext.Provider value={{hasAnswer,setHasAnswer}}>
+          <LandingPage/>
+        </AnswerContext.Provider>
         {/*<button onClick={googleLogin}>Log in with gmail</button>
         <button onClick={addRecord}>add record</button>
   <button onClick={getRecords}>get record</button>*/}

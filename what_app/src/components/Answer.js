@@ -4,7 +4,7 @@ import firebase from '../firebase'
 function Answer(props){
     const appId = props.appId;
     const [comments,setComments] = React.useState(null);
-
+    
     function getAllComments(){
         firebase
         .firestore().collection('comments').where("appId","==",{appId})
