@@ -102,20 +102,17 @@ function Question(props) {
 
             {hasAnswer ? <Answer ratings={ratings} communicators={bestFitCommunicators}/> : <div>
                 <BreadcrumbButtons items={breadcrumbs_list}/>
-                <p>{currentQuestion.TextField}</p>
-
-                <Button variant="contained" color="primary" onClick={() => {
-                    checkIfHasAnswer(0);
-                    setBreadcrumb(breadcrumb + " " + noButtonText)
-                }}>{noButtonText}
-                </Button>
-
+                <h1>{currentQuestion.TextField}</h1>
+                    <Button variant="contained" color="primary" onClick={() => {
+                        checkIfHasAnswer(0);
+                        setBreadcrumb(breadcrumb + " " + noButtonText)
+                    }}>{noButtonText}
+                    </Button>
                 <Button variant="contained" color="primary" onClick={() => {
                     checkIfHasAnswer(1);
                     setBreadcrumb(breadcrumb + " " + okButtonText)
                 }}>{okButtonText}
                 </Button>
-
                 <Button variant="contained" color="primary" onClick={() => {
                     checkIfHasAnswer(2);
                     setBreadcrumb(breadcrumb + " " + strongButtonText)
