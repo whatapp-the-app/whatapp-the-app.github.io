@@ -37,7 +37,7 @@ function googleLogin(){
             id: doc.id,
             ...doc.data()
         }))
-        if(records.length!=0){firebase.firestore().collection('comments').doc(records[0].id).update({
+        if(records.length!==0){firebase.firestore().collection('comments').doc(records[0].id).update({
             AppId: communicator.id,
             rating: rating,
             text: text,
@@ -81,15 +81,12 @@ function Answer(props){
         })
         setHideButton(key);
     }
-    const results=React.useMemo(()=>{
-        
-    })
 
     return(
         <div>
              <p>Your answer n-boy</p>
              
-             {loggedIn==false && <button onClick={()=>{setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a comment</button>}
+             {loggedIn===false && <button onClick={()=>{setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a comment</button>}
              
              {loggedIn && <button onClick={()=>{setLoggedIn(false);googleLogout()}}>log out</button>}
             {communicators.map((communicator,key)=>{
@@ -97,12 +94,12 @@ function Answer(props){
                 <div key={key}> 
                     <p>name: {communicator.name}</p>
                     <StarRating rating={ratings[communicator.id]}/>
-                    {hideButton!=key && <button onClick={()=>loadComments(communicator.id,key)}>load comments</button>}
-                    {hideButton==key && comments != null && comments.map((comment,key2)=>{
+                    {hideButton!==key && <button onClick={()=>loadComments(communicator.id,key)}>load comments</button>}
+                    {hideButton===key && comments != null && comments.map((comment,key2)=>{
                         return(<p key={key2}>{comment.text}</p>)
                     })}
-                    {localStorage.getItem("user")!=null  && hideButton==key && <button onClick={()=>addComment(communicator,4,"lol")}>submit rating</button>}
-                    {hideButton==key && <button onClick={()=>setHideButton(null)}>hide comments</button>}
+                    {localStorage.getItem("user")!=null  && hideButton===key && <button onClick={()=>addComment(communicator,4,"lol")}>submit rating</button>}
+                    {hideButton===key && <button onClick={()=>setHideButton(null)}>hide comments</button>}
                 </div>)
             })}
         </div>

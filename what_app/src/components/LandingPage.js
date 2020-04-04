@@ -1,7 +1,6 @@
-import React, { useState,useContext } from 'react';
+import React from 'react';
 import firebase from '../firebase'
 import Question from './Question'
-import Answer from './Answer'
 // Material UI Imports
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,7 +32,7 @@ function LandingPage(){
 
     React.useMemo(()=>{getQuestions()},[]);
     React.useMemo(()=>{getAllCommunicators()},[]);
-    React.useMemo(()=>{getRatings()},[communicators]);
+    React.useMemo(()=>{getRatings()},[]);
 
     function getRatings(){
         if(communicators!=null){
@@ -53,6 +52,7 @@ function LandingPage(){
                 grade/=records.length;
                 tempRatings[communicator.id]=grade;
         });
+        return null;
         })
         setRatings(tempRatings);}
     }
