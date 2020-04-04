@@ -1,10 +1,10 @@
 import React from 'react';
 
-function BreadcrumbList(props) {
+function BreadcrumbButtons(props) {
     let array = [];
     for(let i = 0; i < props.items.length; i++) {
       array.push(
-        <button key={i}>{props.items[i]}</button>
+          <button key={i}>{props.items[i]}</button>
       );
     }
     return (
@@ -17,14 +17,13 @@ function BreadcrumbList(props) {
 function Question(props){
     const [breadcrumb = "START",setBreadcrumb]=React.useState(props.breadcrumb);
     const [question,setQuestion]=React.useState(props.question)
-    
 
     const breadcrumbs_list = breadcrumb.split(' ');
 
     return(
         <div>
-            <ul><BreadcrumbList items={breadcrumbs_list} /></ul>
-            <p>Lorem ipsum</p>
+            <ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
+            <p>{question.TextField}</p>
             <button onClick={()=>setBreadcrumb(breadcrumb + " yes")}>yes</button>
             <button onClick={()=>setBreadcrumb(breadcrumb + " no")}>no</button>
         </div>
