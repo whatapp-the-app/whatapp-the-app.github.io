@@ -22,8 +22,6 @@ function getAllMaxInMap(map) {
         (a, b) => a >= b ? a : b
     );
 
-    console.log(max);
-
     for (const [key, value] of map) {
         if (value === max) {
             arr.push(key);
@@ -37,7 +35,20 @@ function Question(props) {
     const [breadcrumb = "START", setBreadcrumb] = React.useState(props.breadcrumb);
     const breadcrumbs_list = breadcrumb.split(' ');
 
-    const [questions, setQuestions] = React.useState(props.questions);
+    const [questions] = React.useState(props.questions);
+    const [nextQuestions] = React.useState(
+        () => {
+            const numbers = [...Array(questions.length).keys()].map(num => num);
+            numbers.sort(() => Math.random() - .5);
+
+            let arr = [];
+            for (const number of numbers) {
+                arr.push(questions[number]);
+            }
+
+            return arr;
+        }
+    );
     const [currentQuestion, setCurrentQuestion] = React.useState(questions[0]);
 
     const [communicators, setCommunicators] = React.useState(props.communicators);
@@ -46,7 +57,6 @@ function Question(props) {
     );
     const [bestFitCommunicators, setBestFitCommunicators] = React.useState(null);
 
-    const [currentText, setCurrentText] = React.useState(questions[0].TextField);
     const [hasAnswer, setHasAnswer] = React.useState(false);
 
     function applyAnswer(ans) {
@@ -70,11 +80,13 @@ function Question(props) {
             // localStorage.setItem("hasAnswer", true);
         } else {
             applyAnswer(ans);
-            setCurrentQuestion(questions.pop());
+
+            if (questions.length === nextQuestions.length) {
+                questions.shift();
+            }
+
+            setCurrentQuestion(questions.shift());
         }
-
-
-        //TODO case when all communicators would be rejected
     }
 
     const strongButtonText = "stronk";
@@ -82,31 +94,35 @@ function Question(props) {
     const noButtonText = "bruh";
 
     return (
-        <div>
-            {hasAnswer ? <Answer communicators={bestFitCommunicators}/> : <div>
-                <ul><BreadcrumbButtons items={breadcrumbs_list}/></ul>
-                <p>{currentQuestion.TextField}</p>
+        <>
+            {hasAnswer ?
+                <Answer communicators={bestFitCommunicators} allCommunicators={communicators}
+                        questions={nextQuestions}/>
+                :
+                <div>
+                    <ul><BreadcrumbButtons items={breadcrumbs_list}/></ul>
+                    <p>{currentQuestion.TextField}</p>
 
-                <button onClick={() => {
-                    checkIfHasAnswer(0);
-                    setBreadcrumb(breadcrumb + " " + noButtonText)
-                }}>{noButtonText}
-                </button>
+                    <button onClick={() => {
+                        checkIfHasAnswer(0);
+                        setBreadcrumb(breadcrumb + " " + noButtonText)
+                    }}>{noButtonText}
+                    </button>
 
-                <button onClick={() => {
-                    checkIfHasAnswer(1);
-                    setBreadcrumb(breadcrumb + " " + okButtonText)
-                }}>{okButtonText}
-                </button>
+                    <button onClick={() => {
+                        checkIfHasAnswer(1);
+                        setBreadcrumb(breadcrumb + " " + okButtonText)
+                    }}>{okButtonText}
+                    </button>
 
-                <button onClick={() => {
-                    checkIfHasAnswer(2);
-                    setBreadcrumb(breadcrumb + " " + strongButtonText)
-                }}>{strongButtonText}
-                </button>
-            </div>}
+                    <button onClick={() => {
+                        checkIfHasAnswer(2);
+                        setBreadcrumb(breadcrumb + " " + strongButtonText)
+                    }}>{strongButtonText}
+                    </button>
+                </div>}
 
-        </div>
+        </>
     )
 }
 
