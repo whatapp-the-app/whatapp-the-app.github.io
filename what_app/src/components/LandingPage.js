@@ -10,10 +10,10 @@ function LandingPage(){
     const [communicators, setCommunicators] = React.useState(null);
     const [start,setStart] = React.useState(true);
     const [questions,setQuestions]= React.useState(null);
-    //const [hasAnswer,setHasAnswer] = React.useContext(AnswerContext);
 
     React.useMemo(()=>{getQuestions()},[]);
     React.useMemo(()=>{getAllCommunicators()},[]);
+    const {hasAnswer,setHasAnswer} = React.useContext(AnswerContext);
 
     function getQuestions(){
         firebase
@@ -46,8 +46,8 @@ function LandingPage(){
             <button onClick={()=>{setStart(false)}}>start</button>
         </div> :
         localStorage.getItem("hasAnswer")==true ? <Answer communicators={localStorage.getItem("communicators")}/>:
-        <Question questions={questions} communicators={communicators}/>
-        }
+         <Question questions={questions} communicators={communicators}/>
+        } 
         </>
     )
 }
