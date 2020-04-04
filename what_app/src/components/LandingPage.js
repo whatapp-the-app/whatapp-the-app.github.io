@@ -7,7 +7,8 @@ function LandingPage(){
     const [communicators, setCommunicators] = React.useState(null);
     const [start,setStart] = React.useState(true);
     const [questions,setQuestions]= React.useState(null);
-
+    const questMemo = React.useMemo(()=>{getQuestions()},[]);
+    
     function getQuestions(){
         firebase
         .firestore().collection('questions')
@@ -31,10 +32,9 @@ function LandingPage(){
             setCommunicators(records);
         })
     }
-    
     return(
         <>
-        {getAllCommuniators()}
+        {console.log(questions)}
         {start ? <div>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras fermentum eget nisi non fermentum. Etiam varius ligula nec ante mollis, eget placerat metus mollis. Praesent et auctor odio. Cras lacinia justo at mauris molestie rutrum. Integer luctus purus vel mi ultricies ultrices. Vestibulum non ipsum non turpis blandit tempor.</p>
             <button onClick={()=>setStart(false)}>start</button>
