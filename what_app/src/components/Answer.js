@@ -17,12 +17,28 @@ function Answer(props){
             setComments(records);
         })
     }
-    
+    function loadComments(appID){
+        console.log(appID)
+        firebase
+        .firestore().collection('comments').where("AppId","==",appID)
+        .onSnapshot((snapshot)=>{
+            const records = snapshot.docs.map((doc)=>({
+                id: doc.id,
+                ...doc.data()
+            }))
+            console.log(records)
+        })
+    }
+
     return(
         <div>
             <p>Your answer n-boy</p>
-            {communicators.map((communicator)=>{
-                return <p>{communicator.name}</p>
+            {communicators.map((communicator,key)=>{
+                return (
+                <div key={key}>
+                    <p>name: {communicator.name}</p>
+                    <button onClick={()=>loadComments(communicator.id)}>load comments</button>
+                </div>)
             })}
         </div>
     )
