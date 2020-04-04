@@ -2,7 +2,6 @@ import React, { useState,useContext } from 'react';
 import firebase from '../firebase'
 import Question from './Question'
 import Answer from './Answer'
-import { AnswerContext } from '../AnswerContext.js';
 
 
 
@@ -13,7 +12,6 @@ function LandingPage(){
 
     React.useMemo(()=>{getQuestions()},[]);
     React.useMemo(()=>{getAllCommunicators()},[]);
-    const {hasAnswer,setHasAnswer} = React.useContext(AnswerContext);
 
     function getQuestions(){
         firebase
@@ -45,7 +43,6 @@ function LandingPage(){
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras fermentum eget nisi non fermentum. Etiam varius ligula nec ante mollis, eget placerat metus mollis. Praesent et auctor odio. Cras lacinia justo at mauris molestie rutrum. Integer luctus purus vel mi ultricies ultrices. Vestibulum non ipsum non turpis blandit tempor.</p>
             <button onClick={()=>{setStart(false)}}>start</button>
         </div> :
-        localStorage.getItem("hasAnswer")==true ? <Answer communicators={localStorage.getItem("communicators")}/>:
          <Question questions={questions} communicators={communicators}/>
         } 
         </>

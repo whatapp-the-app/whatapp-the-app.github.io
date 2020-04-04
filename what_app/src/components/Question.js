@@ -1,5 +1,4 @@
 import React from 'react';
-import { AnswerContext } from '../AnswerContext.js';
 import Answer from './Answer';
 
 function BreadcrumbButtons(props) {
@@ -18,29 +17,42 @@ function BreadcrumbButtons(props) {
 
 function Question(props){
     const [breadcrumb = "START",setBreadcrumb]=React.useState(props.breadcrumb);
-    //const [question,setQuestion]=React.useState(props.question)
     const [questions, setQuestions]=React.useState(props.questions)
     const [communicators,setCommunicators]=React.useState(props.communicators)
     const [currentText,setCurrentText]=React.useState(questions[0].TextField)
+    const [currentQuestion,setCurrentQuestion]=React.useState(questions[0])
     const breadcrumbs_list = breadcrumb.split(' ');
-    const {hasAnswer,setHasAnswer} = React.useContext(AnswerContext);
+    const [hasAnswer,setHasAnswer]= React.useState(false);
 
-    function checkIfHasAnswer(){
+    function applyAnswer(ans){
+        if (ans===true)
+        {let tempCommunicators=[];
+        communicators.map((communicator)=>{
+            if(communicator[currentQuestion.feature]==ans){
+                tempCommunicators.push(communicator);
+            }
+        })
+        setCommunicators(tempCommunicators);}
+    }
+
+    function checkIfHasAnswer(ans){
+        
+        console.log(communicators);
         if(questions.length==1 || communicators.length ==1){
             localStorage.setItem("communicators",{communicators});
-            setHasAnswer("true");
+            setHasAnswer(true);
             localStorage.setItem("hasAnswer",true);
         }else{
-            setCurrentText(questions.pop().TextField)
-            return(<Answer/>)
+            applyAnswer(ans);
+            setCurrentQuestion(questions.pop());
         }
-        //TODO case when all communcators would be rejected
+        //TODO case when all communicators would be rejected
     }
     return(
-        <div>{hasAnswer? <Answer/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
-        <p>{currentText}</p>
-        <button onClick={()=>{checkIfHasAnswer();setBreadcrumb(breadcrumb + " yes")}}>yes</button>
-        <button onClick={()=>{checkIfHasAnswer();setBreadcrumb(breadcrumb + " no")}}>no</button></div>}
+        <div>{hasAnswer? <Answer communicators={communicators}/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
+        <p>{currentQuestion.TextField}</p>
+        <button onClick={()=>{checkIfHasAnswer(true);setBreadcrumb(breadcrumb + " yes")}}>yes</button>
+        <button onClick={()=>{checkIfHasAnswer(false);setBreadcrumb(breadcrumb + " no")}}>no</button></div>}
             
         </div>
     )
