@@ -16,7 +16,7 @@ function Answer(props){
             setComments(records);
         })
     }
-
+    
     return(
         <div>
             <p>Your answer n-boy</p>

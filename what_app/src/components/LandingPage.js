@@ -28,8 +28,7 @@ function LandingPage(){
                 id: doc.id,
                 ...doc.data()
             }))
-            console.log(records)
-            //setCommunicators(records);
+            setCommunicators(records);
         })
     }
     
