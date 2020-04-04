@@ -4,16 +4,6 @@ import './App.css';
 import firebase from './firebase'
 import LandingPage from './components/LandingPage'
 
-function googleLogin(){
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-  firebase.auth().signInWithPopup(provider).then(result => {
-    const user = result.user;
-    console.log(user)
-    alert("hello "+user.displayName);
-  })
-}
-
 function getRecords(){
   firebase
     .firestore().collection('communicators')
@@ -24,6 +14,17 @@ function getRecords(){
       }))
       console.log(records)
     })
+}
+
+function googleLogin(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  firebase.auth().signInWithPopup(provider).then(result => {
+    const user = result.user;
+    localStorage.setItem("user",user);
+    console.log(user)
+    alert("hello "+user.displayName);
+  })
 }
 
 function addRecord(){

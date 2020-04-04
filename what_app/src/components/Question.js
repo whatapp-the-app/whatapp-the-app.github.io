@@ -49,7 +49,7 @@ function Question(props){
         //TODO case when all communicators would be rejected
     }
     return(
-        <div>{hasAnswer? <Answer ratings={ratings} communicators={communicators}/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
+        <div>{hasAnswer? <Answer logger={props.logger} ratings={ratings} communicators={communicators}/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
         <p>{currentQuestion.TextField}</p>
         <button onClick={()=>{checkIfHasAnswer(true);setBreadcrumb(breadcrumb + " yes")}}>yes</button>
         <button onClick={()=>{checkIfHasAnswer(false);setBreadcrumb(breadcrumb + " no")}}>no</button></div>}
