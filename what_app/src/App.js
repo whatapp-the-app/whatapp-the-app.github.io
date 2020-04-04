@@ -39,14 +39,12 @@ function addRecord(){
 function App() {
 
   return (
-    <div className="App">
-      <header className="App-header">
+          <>
           <LandingPage/>
         {/*<button onClick={googleLogin}>Log in with gmail</button>
         <button onClick={addRecord}>add record</button>
   <button onClick={getRecords}>get record</button>*/}
-      </header>
-    </div>
+          </>
   );
 }
 
