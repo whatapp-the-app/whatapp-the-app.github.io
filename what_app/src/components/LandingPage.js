@@ -22,11 +22,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LandingPage(){
+function LandingPage(props){
     const [communicators, setCommunicators] = React.useState(null);
     const [start,setStart] = React.useState(true);
     const [questions,setQuestions]= React.useState(null);
     const [ratings,setRatings]=React.useState([]);
+    
 
     const classes = useStyles();
 
@@ -88,7 +89,7 @@ function LandingPage(){
                 <Grid item xs={12}>
                 <div className={classes.paper}>
                     <h1>WhatsApp</h1>
-                    <h>Let us help you choose your communicator</h>
+                    <h3>Let us help you choose your communicator</h3>
                     <hr></hr>
                 </div>
                 </Grid>
@@ -128,7 +129,7 @@ function LandingPage(){
             </Button>
           </div>
         </Grid></>:
-         <Question ratings={ratings} questions={questions} communicators={communicators}/>
+         <Question ratings={ratings} logger={props.logger} questions={questions} communicators={communicators}/>
         } 
 
 
