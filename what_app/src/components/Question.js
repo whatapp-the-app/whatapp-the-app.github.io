@@ -23,6 +23,7 @@ function Question(props){
     const [currentQuestion,setCurrentQuestion]=React.useState(questions[0])
     const breadcrumbs_list = breadcrumb.split(' ');
     const [hasAnswer,setHasAnswer]= React.useState(false);
+    const [ratings]=React.useState(props.ratings)
 
     function applyAnswer(ans){
         if (ans===true)
@@ -48,7 +49,7 @@ function Question(props){
         //TODO case when all communicators would be rejected
     }
     return(
-        <div>{hasAnswer? <Answer communicators={communicators}/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
+        <div>{hasAnswer? <Answer ratings={ratings} communicators={communicators}/>:<div><ul><BreadcrumbButtons items={breadcrumbs_list} /></ul>
         <p>{currentQuestion.TextField}</p>
         <button onClick={()=>{checkIfHasAnswer(true);setBreadcrumb(breadcrumb + " yes")}}>yes</button>
         <button onClick={()=>{checkIfHasAnswer(false);setBreadcrumb(breadcrumb + " no")}}>no</button></div>}
