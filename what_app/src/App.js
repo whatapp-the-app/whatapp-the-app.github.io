@@ -40,22 +40,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        
         <LandingPage></LandingPage>
-        <button onClick={googleLogin}>Log in with gmail</button>
+        {/*<button onClick={googleLogin}>Log in with gmail</button>
         <button onClick={addRecord}>add record</button>
-        <button onClick={getRecords}>get record</button>
+  <button onClick={getRecords}>get record</button>*/}
       </header>
     </div>
   );

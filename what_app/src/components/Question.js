@@ -1,6 +1,9 @@
 import React from 'react';
 
-function Question(){
+function Question(props){
+    const [breadcrumb,setBreadcrumb]=React.useState(props.breadcrumb);
+    const [question,setQuestion]=React.useState(props.question)
+
     return(
         <div>
             <p>breadcrumb</p>
