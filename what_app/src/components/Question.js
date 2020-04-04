@@ -47,6 +47,8 @@ function getAllMaxInMap(map) {
 function Question(props) {
     const [breadcrumb = "START", setBreadcrumb] = React.useState(props.breadcrumb);
     const breadcrumbs_list = breadcrumb.split(' ');
+    const [hasAnswer,setHasAnswer]= React.useState(false);
+    const [ratings]=React.useState(props.ratings)
 
     const [questions, setQuestions] = React.useState(props.questions);
     const [currentQuestion, setCurrentQuestion] = React.useState(questions[0]);
