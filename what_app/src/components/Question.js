@@ -16,7 +16,7 @@ function BreadcrumbButtons(props) {
     let array = [];
     for (let i = 0; i < props.items.length; i++) {
         array.push(
-            <button key={i}>{props.items[i]}</button>
+            <Button variant="contained" key={i}>{props.items[i]}</Button>
         );
     }
     return (
@@ -47,20 +47,20 @@ function getAllMaxInMap(map) {
 function Question(props) {
     const [breadcrumb = "START", setBreadcrumb] = React.useState(props.breadcrumb);
     const breadcrumbs_list = breadcrumb.split(' ');
-    const [hasAnswer,setHasAnswer]= React.useState(false);
-    const [ratings]=React.useState(props.ratings)
 
-    const [questions, setQuestions] = React.useState(props.questions);
-    const [currentQuestion, setCurrentQuestion] = React.useState(questions[0]);
+    const [questions, setQuestions]=React.useState(props.questions)
+    const [currentQuestion,setCurrentQuestion]=React.useState(questions[0])
 
     const [communicators, setCommunicators] = React.useState(props.communicators);
     const [communicatorScores, setCommunicatorScores] = React.useState(
         new Map(communicators.map(obj => [obj, 0]))
     );
-    const [bestFitCommunicators, setBestFitCommunicators] = React.useState(null);
 
-    const [currentText, setCurrentText] = React.useState(questions[0].TextField);
-    const [hasAnswer, setHasAnswer] = React.useState(false);
+    const [bestFitCommunicators, setBestFitCommunicators] = React.useState(null);
+    
+
+    const [hasAnswer,setHasAnswer]= React.useState(false);
+    const [ratings]=React.useState(props.ratings)
 
     function applyAnswer(ans) {
         let tempCommunicatorScores = new Map();
@@ -100,7 +100,7 @@ function Question(props) {
         <Grid item xs={12}>
           <div className={classes.paper}>
 
-            {hasAnswer ? <Answer communicators={bestFitCommunicators}/> : <div>
+            {hasAnswer ? <Answer ratings={ratings} communicators={bestFitCommunicators}/> : <div>
                 <BreadcrumbButtons items={breadcrumbs_list}/>
                 <p>{currentQuestion.TextField}</p>
 
