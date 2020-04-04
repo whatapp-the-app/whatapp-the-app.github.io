@@ -43,7 +43,9 @@ function LandingPage(){
         communicators===null ?
         <Question question={questions[0]}></Question>:
         communicators.length===1 || questions.length===0 ? 
-        <Answer communicators={communicators}/>:
+        (communicators.map((communicator)=>{
+            return<Answer communicator={communicator}/>
+        })) :
         <Question/>}
         </>
     )
