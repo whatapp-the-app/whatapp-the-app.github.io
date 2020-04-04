@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import firebase from '../firebase'
 import StarRatings from '../../node_modules/react-star-ratings';
 
@@ -28,15 +28,34 @@ function googleLogin(){
     })
   }
 
+
   function addComment(communicator,rating, text){
-     firebase.firestore().collection('comments').add({
-      AppId: communicator.id,
-      rating: rating,
-      text: text,
-      displayName: localStorage.getItem("displayName"),
-      photoURL: localStorage.getItem("photoUrl"),
-      timestamp: Date.now()
-    }) ;console.log(localStorage.getItem("displayName"));console.log(localStorage.getItem("photoUrl"))
+
+    firebase.firestore().collection('comments').where('AppId','==',communicator.id).where("displayName",'==',localStorage.getItem("displayName"))
+    .onSnapshot((snapshot)=>{
+        const records = snapshot.docs.map((doc)=>({
+            id: doc.id,
+            ...doc.data()
+        }))
+        if(records.length!=0){firebase.firestore().collection('comments').doc(records[0].id).update({
+            AppId: communicator.id,
+            rating: rating,
+            text: text,
+            displayName: localStorage.getItem("displayName"),
+            photoURL: localStorage.getItem("photoUrl"),
+            timestamp: Date.now()
+          })}else{
+            firebase.firestore().collection('comments').add({
+                AppId: communicator.id,
+                rating: rating,
+                text: text,
+                displayName: localStorage.getItem("displayName"),
+                photoURL: localStorage.getItem("photoUrl"),
+                timestamp: Date.now()
+              })
+          }
+        
+}) ;console.log(localStorage.getItem("displayName"));console.log(localStorage.getItem("photoUrl"))
   }
 
 function googleLogout(){

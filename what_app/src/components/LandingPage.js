@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LandingPage(props){
+function LandingPage(){
     const [communicators, setCommunicators] = React.useState(null);
     const [start,setStart] = React.useState(true);
     const [questions,setQuestions]= React.useState(null);
@@ -129,7 +129,7 @@ function LandingPage(props){
             </Button>
           </div>
         </Grid></>:
-         <Question ratings={ratings} logger={props.logger} questions={questions} communicators={communicators}/>
+         <Question ratings={ratings}  questions={questions} communicators={communicators}/>
         } 
 
 
