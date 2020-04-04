@@ -22,10 +22,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function LandingPage() {
+function LandingPage(props) {
     const [communicators, setCommunicators] = React.useState(null);
     const [start, setStart] = React.useState(true);
     const [questions, setQuestions] = React.useState(null);
+    const [ratings, setRatings] = React.useState([]);
+
 
     const classes = useStyles();
 
@@ -35,6 +37,32 @@ function LandingPage() {
     React.useMemo(() => {
         getAllCommunicators()
     }, []);
+    React.useMemo(() => {
+        getRatings()
+    }, [communicators]);
+
+    function getRatings() {
+        if (communicators != null) {
+            let tempRatings = [];
+            communicators.map((communicator, key) => {
+                let grade = 0;
+                firebase
+                    .firestore().collection('comments').where("AppId", "==", communicator.id)
+                    .onSnapshot((snapshot) => {
+                        const records = snapshot.docs.map((doc) => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        records.forEach(record => {
+                            grade += record.rating;
+                        });
+                        grade /= records.length;
+                        tempRatings[communicator.id] = grade;
+                    });
+            });
+            setRatings(tempRatings);
+        }
+    }
 
     function getQuestions() {
         firebase
@@ -69,7 +97,7 @@ function LandingPage() {
                         <Grid item xs={12}>
                             <div className={classes.paper}>
                                 <h1>WhatsApp</h1>
-                                <h>Let us help you choose your communicator</h>
+                                <h3>Let us help you choose your communicator</h3>
                                 <hr></hr>
                             </div>
                         </Grid>
@@ -115,7 +143,8 @@ function LandingPage() {
                                         </Button>
                                     </div>
                                 </Grid></> :
-                            <Question questions={questions} communicators={communicators}/>
+                            <Question ratings={ratings} logger={props.logger} questions={questions}
+                                      communicators={communicators}/>
                         }
 
 

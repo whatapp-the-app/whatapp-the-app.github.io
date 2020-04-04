@@ -1,11 +1,22 @@
 import React from 'react';
 import Answer from './Answer';
+import {Button} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import {makeStyles} from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+}));
 
 function BreadcrumbButtons(props) {
     let array = [];
     for (let i = 0; i < props.items.length; i++) {
         array.push(
-            <button key={i}>{props.items[i]}</button>
+            <Button variant="contained" key={i}>{props.items[i]}</Button>
         );
     }
     return (
@@ -55,9 +66,11 @@ function Question(props) {
     const [communicatorScores, setCommunicatorScores] = React.useState(
         new Map(communicators.map(obj => [obj, 0]))
     );
+
     const [bestFitCommunicators, setBestFitCommunicators] = React.useState(null);
 
     const [hasAnswer, setHasAnswer] = React.useState(false);
+    const [ratings] = React.useState(props.ratings);
 
     function applyAnswer(ans) {
         let tempCommunicatorScores = new Map();
@@ -89,40 +102,52 @@ function Question(props) {
         }
     }
 
-    const strongButtonText = "stronk";
-    const okButtonText = "yass";
-    const noButtonText = "bruh";
+    const strongButtonText = "must-have";
+    const okButtonText = "maybe";
+    const noButtonText = "no";
+
+    const classes = useStyles();
 
     return (
-        <>
-            {hasAnswer ?
-                <Answer communicators={bestFitCommunicators} allCommunicators={communicators}
-                        questions={nextQuestions}/>
-                :
-                <div>
-                    <ul><BreadcrumbButtons items={breadcrumbs_list}/></ul>
-                    <p>{currentQuestion.TextField}</p>
 
-                    <button onClick={() => {
-                        checkIfHasAnswer(0);
-                        setBreadcrumb(breadcrumb + " " + noButtonText)
-                    }}>{noButtonText}
-                    </button>
+        <Grid item xs={12}>
+            <div className={classes.paper}>
 
-                    <button onClick={() => {
-                        checkIfHasAnswer(1);
-                        setBreadcrumb(breadcrumb + " " + okButtonText)
-                    }}>{okButtonText}
-                    </button>
+                {hasAnswer ?
+                    <Answer ratings={ratings} communicators={bestFitCommunicators} allCommunicators={communicators}
+                            questions={nextQuestions}/> : <div>
 
-                    <button onClick={() => {
-                        checkIfHasAnswer(2);
-                        setBreadcrumb(breadcrumb + " " + strongButtonText)
-                    }}>{strongButtonText}
-                    </button>
-                </div>}
+                        <BreadcrumbButtons items={breadcrumbs_list}/>
+                        <h1>{currentQuestion.TextField}</h1>
 
-        </>
+                        <Grid container>
+                            <Grid item xs={3}/>
+                            <Grid item xs={2}>
+                                <Button variant="contained" color="primary" onClick={() => {
+                                    checkIfHasAnswer(2);
+                                    setBreadcrumb(breadcrumb + " " + strongButtonText)
+                                }}>{strongButtonText}
+                                </Button>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Button variant="contained" color="primary" onClick={() => {
+                                    checkIfHasAnswer(1);
+                                    setBreadcrumb(breadcrumb + " " + okButtonText)
+                                }}>{okButtonText}
+                                </Button>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Button variant="contained" color="primary" onClick={() => {
+                                    checkIfHasAnswer(0);
+                                    setBreadcrumb(breadcrumb + " " + noButtonText)
+                                }}>{noButtonText}
+                                </Button>
+                            </Grid>
+                            <Grid item xs={3}/>
+                        </Grid>
+                    </div>}
+            </div>
+        </Grid>
     )
 }
 
