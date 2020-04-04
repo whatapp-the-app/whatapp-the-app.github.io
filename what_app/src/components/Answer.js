@@ -1,16 +1,28 @@
 import React, { Suspense } from 'react';
 import firebase from '../firebase'
 import StarRatings from '../../node_modules/react-star-ratings';
+import { Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 function StarRating(props){
     return(
         <StarRatings
             rating={props.rating}
-            starDimension="40px"
-            starSpacing="15px"
+            starDimension={props.size}
+            starSpacing="0px"
             />
     );
 }
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+      spacing: 10,
+    }, 
+  }));
 
 
 function googleLogin(){
@@ -66,27 +78,48 @@ function Answer(props){
         
     })
 
+    const classes = useStyles();
+
     return(
-        <div>
-             <p>Your answer n-boy</p>
-             
-             {loggedIn==false && <button onClick={()=>{setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a comment</button>}
-             
-             {loggedIn && <button onClick={()=>{setLoggedIn(false);googleLogout()}}>log out</button>}
+        <Grid container class={classes.paper}>
+
+            <Grid item xs={12} style={{marginBottom: "100px"}}>
+                <h3>OUR RECOMMENDATIONS FOR YOU:</h3>
+                {loggedIn===false && <Button variant="contained" color="primary" onClick={()=>{setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a comment</Button>}
+            </Grid>
+
             {communicators.map((communicator,key)=>{
-                return (
-                <div key={key}> 
-                    <p>name: {communicator.name}</p>
-                    <StarRating rating={ratings[communicator.id]}/>
-                    {hideButton!=key && <button onClick={()=>loadComments(communicator.id,key)}>load comments</button>}
-                    {hideButton==key && comments != null && comments.map((comment,key2)=>{
-                        return(<p key={key2}>{comment.text}</p>)
+                return (<>
+                <div key={key} style={{margin: "20px"}}> 
+                    
+                        <Grid item xs={12} style={{paddingBottom: "20px"}}>
+                            <h2 style={{margin: "10px"}}>{communicator.name}</h2>
+                            <StarRating size="30px" rating={ratings[communicator.id]}/>
+                        </Grid>
+
+                    {hideButton!==key && <Button variant="contained" color="primary" onClick={()=>loadComments(communicator.id,key)}>load comments</Button>}
+                    {hideButton===key && <h4>Comments:</h4>}
+                    {hideButton===key && comments != null && comments.map((comment,key2)=>{
+                        return(
+                        <>
+                            <div>
+
+                                <p key={key2} style={{color: "black", fontWeight: "bold"}}>{comment.displayName}</p>
+                                <StarRating size="15px" key={key2} rating={comment.rating}/>
+                                <p key={key2}>{comment.text}</p>
+
+                            </div>
+                            <hr style={{width: "25%"}}/>
+                        </>
+                        )
                     })}
-                    {localStorage.getItem("user")!=null  && hideButton==key && <button onClick={()=>addComment(communicator,4,"lol")}>submit rating</button>}
-                    {hideButton==key && <button onClick={()=>setHideButton(null)}>hide comments</button>}
-                </div>)
+                    {localStorage.getItem("user")!=null  && hideButton==key && <Button variant="contained" color="primary" onClick={()=>addComment(communicator,4,"lol")}>submit rating</Button>}
+                    {hideButton===key && <Button variant="contained" color="primary" onClick={()=>setHideButton(null)}>hide comments</Button>}
+                </div><hr /></>)
             })}
-        </div>
+
+            {loggedIn && <Button variant="contained" color="primary" onClick={()=>{setLoggedIn(false);googleLogout()}}>log out</Button>}
+        </Grid>
     )
     
 }

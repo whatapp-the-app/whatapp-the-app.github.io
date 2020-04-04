@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
-    },
+    }, 
   }));
 
 function BreadcrumbButtons(props) {
@@ -90,9 +90,9 @@ function Question(props) {
         //TODO case when all communicators would be rejected
     }
 
-    const strongButtonText = "stronk";
-    const okButtonText = "yass";
-    const noButtonText = "bruh";
+    const strongButtonText = "must-have";
+    const okButtonText = "maybe";
+    const noButtonText = "no";
 
     const classes = useStyles();
 
@@ -101,23 +101,35 @@ function Question(props) {
           <div className={classes.paper}>
 
             {hasAnswer ? <Answer ratings={ratings} communicators={bestFitCommunicators}/> : <div>
+
                 <BreadcrumbButtons items={breadcrumbs_list}/>
                 <h1>{currentQuestion.TextField}</h1>
-                    <Button variant="contained" color="primary" onClick={() => {
-                        checkIfHasAnswer(0);
-                        setBreadcrumb(breadcrumb + " " + noButtonText)
-                    }}>{noButtonText}
-                    </Button>
-                <Button variant="contained" color="primary" onClick={() => {
-                    checkIfHasAnswer(1);
-                    setBreadcrumb(breadcrumb + " " + okButtonText)
-                }}>{okButtonText}
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => {
-                    checkIfHasAnswer(2);
-                    setBreadcrumb(breadcrumb + " " + strongButtonText)
-                }}>{strongButtonText}
-                </Button>
+
+                <Grid container>
+                    <Grid item xs={3} />
+                    <Grid item xs={2}>
+                        <Button variant="contained" color="primary" onClick={() => {
+                            checkIfHasAnswer(2);
+                            setBreadcrumb(breadcrumb + " " + strongButtonText)
+                        }}>{strongButtonText}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button variant="contained" color="primary" onClick={() => {
+                            checkIfHasAnswer(1);
+                            setBreadcrumb(breadcrumb + " " + okButtonText)
+                        }}>{okButtonText}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button variant="contained" color="primary" onClick={() => {
+                                checkIfHasAnswer(0);
+                                setBreadcrumb(breadcrumb + " " + noButtonText)
+                            }}>{noButtonText}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={3} />
+                </Grid>
             </div>}
                 
             </div>
