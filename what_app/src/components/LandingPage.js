@@ -7,7 +7,8 @@ function LandingPage(){
     const [communicators, setCommunicators] = React.useState(null);
     const [start,setStart] = React.useState(true);
     const [questions,setQuestions]= React.useState(null);
-    const questMemo = React.useMemo(()=>{getQuestions()},[]);
+    React.useMemo(()=>{getQuestions()},[]);
+    React.useMemo(()=>{getAllCommunicators()},[]);
     
     function getQuestions(){
         firebase
@@ -21,7 +22,7 @@ function LandingPage(){
         })
     }
 
-    function getAllCommuniators(){
+    function getAllCommunicators(){
         firebase
         .firestore().collection('communicators')
         .onSnapshot((snapshot)=>{
@@ -32,16 +33,16 @@ function LandingPage(){
             setCommunicators(records);
         })
     }
+
     return(
         <>
-        {console.log(questions)}
         {start ? <div>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras fermentum eget nisi non fermentum. Etiam varius ligula nec ante mollis, eget placerat metus mollis. Praesent et auctor odio. Cras lacinia justo at mauris molestie rutrum. Integer luctus purus vel mi ultricies ultrices. Vestibulum non ipsum non turpis blandit tempor.</p>
             <button onClick={()=>setStart(false)}>start</button>
         </div> :
         communicators===null ?
         <Question question={questions[0]}></Question>:
-        communicators.length()===1 || questions.length()===0 ? 
+        communicators.length===1 || questions.length===0 ? 
         <Answer communicators={communicators}/>:
         <Question/>}
         </>
