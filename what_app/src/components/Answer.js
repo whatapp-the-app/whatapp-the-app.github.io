@@ -122,7 +122,7 @@ function Answer(props) {
 
     const [ratingValue, setRatingValue] = React.useState(2);
     const [commentValue, setCommentValue] = React.useState("Any feedback is welcome!");
-    const [ratings] = React.useState(props.ratings);
+    const ratings= props.ratings;
     const [comments, setComments] = React.useState(null);
 
     const [communicators] = React.useState(props.communicators);
@@ -226,7 +226,6 @@ function Answer(props) {
                                         /><Rating
                                         name="simple-controlled"
                                         value={ratingValue}
-                                        precision={0.5}
                                         onChange={(event, newValue) => {
                                             setRatingValue(newValue);
                                             }}
