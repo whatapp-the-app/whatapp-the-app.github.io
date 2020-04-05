@@ -49,7 +49,6 @@ function Question(props) {
     const [breadcrumb = "Start", setBreadcrumb] = React.useState("Start");
     const breadcrumbs_list = breadcrumb.split('|');
     const [breadCrumbHistory, setBreadCrumbHistory] = React.useState(new Map(breadcrumbs_list.map(obj => [obj, null])));
-
     const [questions] = React.useState(props.questions);
     const [nextQuestions] = React.useState(
         () => {
@@ -118,7 +117,7 @@ function Question(props) {
             <div className={classes.paper}>
 
                 {hasAnswer ?
-                    <Answer ratings={ratings} communicators={bestFitCommunicators} allCommunicators={communicators}
+                    <Answer urls={props.urls} ratings={ratings} communicators={bestFitCommunicators} allCommunicators={communicators}
                             questions={nextQuestions}/> : <div>
 
                         <BreadcrumbButtons items={breadcrumbs_list}/>

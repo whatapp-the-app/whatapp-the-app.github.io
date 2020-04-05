@@ -26,6 +26,7 @@ function LandingPage(){
     const [start, setStart] = React.useState(true);
     const [questions, setQuestions] = React.useState(null);
     const [ratings, setRatings] = React.useState([]);
+    const [urls,setUrls]=React.useState([]);
 
 
     const classes = useStyles();
@@ -42,6 +43,7 @@ function LandingPage(){
 
     function getRatings() {
         if (communicators != null) {
+            let tmpUrls=[];
             let tempRatings = [];
             communicators.map((communicator, key) => {
                 let grade = 0;
@@ -55,11 +57,13 @@ function LandingPage(){
                         records.forEach(record => {
                             grade += record.rating;
                         });
+                        tmpUrls[communicator.id]={url:communicator.url,photourl:communicator.photoURL};
                         grade /= records.length;
                         tempRatings[communicator.id] = grade;
                     });
             });
             setRatings(tempRatings);
+            setUrls(tmpUrls);
         }
     }
 
@@ -142,7 +146,7 @@ function LandingPage(){
                                         </Button>
                                     </div>
                                 </Grid></> :
-                            <Question ratings={ratings} questions={questions}
+                            <Question urls={urls} ratings={ratings} questions={questions}
                                       communicators={communicators}/>
                         }
 

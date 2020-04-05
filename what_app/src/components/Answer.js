@@ -133,6 +133,7 @@ function Answer(props) {
     const [restartApp, setRestart] = React.useState(false);
 
     const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("user") !== null);
+    const [urls]=React.useState(props.urls);
 
     function loadComments(appID, key) {
         firebase
@@ -148,6 +149,7 @@ function Answer(props) {
     }
 
     return (<>
+    
             {restartApp ? <Question questions={questions} communicators={allCommunicators}/> :
                 <div>
                     {localStorage.getItem("displayName")!==null && <p>The best solution for {localStorage.getItem("displayName")}!</p>}
@@ -166,8 +168,7 @@ function Answer(props) {
                     }}>log out</Button>}
                     {communicators.map((communicator, key) => {
                         return (
-                            <div key={key}>
-                                <Card className={classes.root}>
+                            <div key={key}>><Card className={classes.root}>
                                     <div className={classes.details}>
                                         <CardContent className={classes.content}>
                                             <Typography component="h5" variant="h5">
@@ -181,10 +182,7 @@ function Answer(props) {
                                             <StarRating rating={ratings[communicator.id]}/>
                                         </div>
                                     </div>
-                                    <CardMedia
-                                        className={classes.cover}
-                                        image="https://www.tabletowo.pl/wp-content/uploads/2019/07/slack.jpg"
-                                    />
+                                    <img height="100"src={communicator.name + ".png"}></img>
                                 </Card>
                                 {hideButton !== key &&
                                 <Button onClick={() => loadComments(communicator.id, key)}>show comments</Button>}
