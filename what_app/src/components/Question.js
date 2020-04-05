@@ -106,7 +106,7 @@ function Question(props) {
         }
     }
 
-    const strongButtonText = "must have";
+    const strongButtonText = "yes";
     const okButtonText = "maybe";
     const noButtonText = "no";
 
@@ -125,29 +125,29 @@ function Question(props) {
                         <h1>{currentQuestion.TextField}</h1>
 
                         <Grid container>
-                            <Grid item xs={3}/>
-                            <Grid item xs={2}>
-                                <Button variant="contained" color="primary" onClick={() => {
+                            <Grid item xs={0} sm={3}/>
+                            <Grid item xs={4} sm={2}>
+                                <Button style={{margin: "20px"}} variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(2);
                                     setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{strongButtonText}
                                 </Button>
                             </Grid>
-                            <Grid item xs={2}>
-                                <Button variant="contained" color="primary" onClick={() => {
+                            <Grid item xs={4} sm={2}>
+                                <Button style={{margin: "20px"}} variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(1);
                                     setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{okButtonText}
                                 </Button>
                             </Grid>
-                            <Grid item xs={2}>
-                                <Button variant="contained" color="primary" onClick={() => {
+                            <Grid item xs={4} sm={2}>
+                                <Button style={{margin: "20px"}} variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(0);
                                     setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{noButtonText}
                                 </Button>
                             </Grid>
-                            <Grid item xs={3}/>
+                            <Grid item xs={0} sm={3}/>
                         </Grid>
                     </div>}
             </div>
