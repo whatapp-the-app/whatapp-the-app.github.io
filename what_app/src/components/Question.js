@@ -18,7 +18,8 @@ function BreadcrumbButtons(props) {
     let array = [];
     for (let i = 0; i < props.items.length; i++) {
         array.push(
-            <Button variant="contained" key={i}>{props.items[i]}</Button>
+            <Button variant="contained" onClick={() => {
+            }} key={i}>{props.items[i]}</Button>
         );
     }
     return (
@@ -45,8 +46,9 @@ function getAllMaxInMap(map) {
 }
 
 function Question(props) {
-    const [breadcrumb = "START", setBreadcrumb] = React.useState(props.breadcrumb);
-    const breadcrumbs_list = breadcrumb.split(' ');
+    const [breadcrumb = "Start", setBreadcrumb] = React.useState("Start");
+    const breadcrumbs_list = breadcrumb.split('|');
+    const [breadCrumbHistory, setBreadCrumbHistory] = React.useState(new Map(breadcrumbs_list.map(obj => [obj, null])));
 
     const [questions] = React.useState(props.questions);
     const [nextQuestions] = React.useState(
@@ -104,7 +106,7 @@ function Question(props) {
         }
     }
 
-    const strongButtonText = "must-have";
+    const strongButtonText = "must have";
     const okButtonText = "maybe";
     const noButtonText = "no";
 
@@ -127,21 +129,21 @@ function Question(props) {
                             <Grid item xs={2}>
                                 <Button variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(2);
-                                    setBreadcrumb(breadcrumb + " " + strongButtonText)
+                                    setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{strongButtonText}
                                 </Button>
                             </Grid>
                             <Grid item xs={2}>
                                 <Button variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(1);
-                                    setBreadcrumb(breadcrumb + " " + okButtonText)
+                                    setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{okButtonText}
                                 </Button>
                             </Grid>
                             <Grid item xs={2}>
                                 <Button variant="contained" color="primary" onClick={() => {
                                     checkIfHasAnswer(0);
-                                    setBreadcrumb(breadcrumb + " " + noButtonText)
+                                    setBreadcrumb(breadcrumb + "|" + currentQuestion.TextField)
                                 }}>{noButtonText}
                                 </Button>
                             </Grid>
