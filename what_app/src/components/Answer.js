@@ -1,30 +1,43 @@
 import React from 'react';
 import firebase from '../firebase'
 import StarRatings from '../../node_modules/react-star-ratings';
+import {Button} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Question from "./Question";
 
-function StarRating(props){
-    return(
+function StarRating(props) {
+    return (
         <StarRatings
             rating={props.rating}
-            starDimension="40px"
-            starSpacing="15px"
-            />
+            starDimension={props.size}
+            starSpacing="0px"
+        />
     );
 }
 
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        spacing: 10,
+    },
+}));
 
-function googleLogin(){
+
+function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
-  
+
     firebase.auth().signInWithPopup(provider).then(result => {
-        
-      const user = result.user;
-      console.log(user.displayName)
-      localStorage.setItem("user",user);
-      localStorage.setItem("displayName",user.displayName);
-      localStorage.setItem("photoUrl",user.photoURL);
-      console.log(user)
-      alert("hello "+user.displayName);
+
+        const user = result.user;
+        console.log(user.displayName)
+        localStorage.setItem("user", user);
+        localStorage.setItem("displayName", user.displayName);
+        localStorage.setItem("photoUrl", user.photoURL);
+        console.log(user)
+        alert("hello " + user.displayName);
     })
   }
 
@@ -63,22 +76,29 @@ function googleLogout(){
     localStorage.removeItem("user");
 }
 
-function Answer(props){
-    const [comments,setComments] = React.useState(null);
-    const [communicators] = React.useState(props.communicators)
-    const [hideButton,setHideButton] = React.useState(null)
-    const [ratings]=React.useState(props.ratings)
-    const [loggedIn,setLoggedIn]=React.useState(localStorage.getItem("user")==null)
-    function loadComments(appID,key){
+function Answer(props) {
+    const [ratings] = React.useState(props.ratings);
+    const [comments, setComments] = React.useState(null);
+
+    const [communicators] = React.useState(props.communicators);
+    const [allCommunicators] = React.useState(props.allCommunicators);
+    const [questions] = React.useState(props.questions);
+
+    const [hideButton, setHideButton] = React.useState(null);
+    const [restartApp, setRestart] = React.useState(false);
+
+    const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("user") == null);
+
+    function loadComments(appID, key) {
         firebase
-        .firestore().collection('comments').where("AppId","==",appID)
-        .onSnapshot((snapshot)=>{
-            const records = snapshot.docs.map((doc)=>({
-                id: doc.id,
-                ...doc.data()
-            }))
-            setComments(records);
-        })
+            .firestore().collection('comments').where("AppId", "==", appID)
+            .onSnapshot((snapshot) => {
+                const records = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setComments(records);
+            });
         setHideButton(key);
     }
 
@@ -104,7 +124,7 @@ function Answer(props){
             })}
         </div>
     )
-    
+
 }
 
 export default Answer
