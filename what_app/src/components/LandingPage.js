@@ -95,7 +95,7 @@ function LandingPage(){
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <div className={classes.paper}>
-                                <h1>WhatsApp</h1>
+                                <h1><img height="60px" src='logo256.png' alt=' '></img>What the App</h1>
                                 <h3>Let us help you choose your communicator</h3>
                                 <hr></hr>
                             </div>
