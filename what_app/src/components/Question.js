@@ -84,7 +84,7 @@ function Question(props) {
 
     function checkIfHasAnswer(ans) {
 
-        if (questions.length == 1 || communicators.length == 1) {
+        if (questions.length <= 1) {
 
             setBestFitCommunicators(getAllMaxInMap(communicatorScores));
             setHasAnswer(true);

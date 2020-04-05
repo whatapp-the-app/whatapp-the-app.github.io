@@ -142,7 +142,7 @@ function LandingPage(){
                                         </Button>
                                     </div>
                                 </Grid></> :
-                            <Question ratings={ratings} logger={props.logger} questions={questions}
+                            <Question ratings={ratings} questions={questions}
                                       communicators={communicators}/>
                         }
 

@@ -39,39 +39,43 @@ function googleLogin() {
         console.log(user)
         alert("hello " + user.displayName);
     })
-  }
+}
 
 
-  function addComment(communicator,rating, text){
+function addComment(communicator, rating, text) {
 
-    firebase.firestore().collection('comments').where('AppId','==',communicator.id).where("displayName",'==',localStorage.getItem("displayName"))
-    .onSnapshot((snapshot)=>{
-        const records = snapshot.docs.map((doc)=>({
-            id: doc.id,
-            ...doc.data()
-        }))
-        if(records.length!==0){firebase.firestore().collection('comments').doc(records[0].id).update({
-            AppId: communicator.id,
-            rating: rating,
-            text: text,
-            displayName: localStorage.getItem("displayName"),
-            photoURL: localStorage.getItem("photoUrl"),
-            timestamp: Date.now()
-          })}else{
-            firebase.firestore().collection('comments').add({
-                AppId: communicator.id,
-                rating: rating,
-                text: text,
-                displayName: localStorage.getItem("displayName"),
-                photoURL: localStorage.getItem("photoUrl"),
-                timestamp: Date.now()
-              })
-          }
-        
-}) ;console.log(localStorage.getItem("displayName"));console.log(localStorage.getItem("photoUrl"))
-  }
+    firebase.firestore().collection('comments').where('AppId', '==', communicator.id).where("displayName", '==', localStorage.getItem("displayName"))
+        .onSnapshot((snapshot) => {
+            const records = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data()
+            }))
+            if (records.length !== 0) {
+                firebase.firestore().collection('comments').doc(records[0].id).update({
+                    AppId: communicator.id,
+                    rating: rating,
+                    text: text,
+                    displayName: localStorage.getItem("displayName"),
+                    photoURL: localStorage.getItem("photoUrl"),
+                    timestamp: Date.now()
+                })
+            } else {
+                firebase.firestore().collection('comments').add({
+                    AppId: communicator.id,
+                    rating: rating,
+                    text: text,
+                    displayName: localStorage.getItem("displayName"),
+                    photoURL: localStorage.getItem("photoUrl"),
+                    timestamp: Date.now()
+                })
+            }
 
-function googleLogout(){
+        });
+    console.log(localStorage.getItem("displayName"));
+    console.log(localStorage.getItem("photoUrl"))
+}
+
+function googleLogout() {
     firebase.auth().signOut();
     localStorage.removeItem("user");
 }
@@ -102,27 +106,41 @@ function Answer(props) {
         setHideButton(key);
     }
 
-    return(
-        <div>
-             <p>Your answer n-boy</p>
-             
-             {loggedIn===false && <button onClick={()=>{setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a comment</button>}
-             
-             {loggedIn && <button onClick={()=>{setLoggedIn(false);googleLogout()}}>log out</button>}
-            {communicators.map((communicator,key)=>{
-                return (
-                <div key={key}> 
-                    <p>name: {communicator.name}</p>
-                    <StarRating rating={ratings[communicator.id]}/>
-                    {hideButton!==key && <button onClick={()=>loadComments(communicator.id,key)}>load comments</button>}
-                    {hideButton===key && comments != null && comments.map((comment,key2)=>{
-                        return(<p key={key2}>{comment.text}</p>)
+    return (<>
+            {restartApp ? <Question questions={questions} communicators={allCommunicators}/> :
+                <div>
+                    <p>Your answer n-boy</p>
+
+                    {loggedIn === false && <button onClick={() => {
+                        setHideButton(null);
+                        setLoggedIn(true);
+                        googleLogin()
+                    }}>log in to leave a comment</button>}
+
+                    {loggedIn && <button onClick={() => {
+                        setLoggedIn(false);
+                        googleLogout()
+                    }}>log out</button>}
+                    {communicators.map((communicator, key) => {
+                        return (
+                            <div key={key}>
+                                <p>name: {communicator.name}</p>
+                                <StarRating rating={ratings[communicator.id]}/>
+                                {hideButton !== key &&
+                                <button onClick={() => loadComments(communicator.id, key)}>load comments</button>}
+                                {hideButton === key && comments != null && comments.map((comment, key2) => {
+                                    return (<p key={key2}>{comment.text}</p>)
+                                })}
+                                {localStorage.getItem("user") != null && hideButton === key &&
+                                <button onClick={() => addComment(communicator, 4, "lol")}>submit rating</button>}
+                                {hideButton === key &&
+                                <button onClick={() => setHideButton(null)}>hide comments</button>}
+                            </div>)
                     })}
-                    {localStorage.getItem("user")!=null  && hideButton===key && <button onClick={()=>addComment(communicator,4,"lol")}>submit rating</button>}
-                    {hideButton===key && <button onClick={()=>setHideButton(null)}>hide comments</button>}
-                </div>)
-            })}
-        </div>
+
+                    <button onClick={() => setRestart(true)}>Let's try again...</button>
+                </div>}
+        </>
     )
 
 }
