@@ -18,8 +18,9 @@ function BreadcrumbButtons(props) {
     let array = [];
     for (let i = 0; i < props.items.length; i++) {
         array.push(
-            <Button variant="contained" onClick={() => {
-            }} key={i}>{props.items[i]}</Button>
+            // <Button size="small" variant="contained" onClick={() => {
+            // }} key={i}>{props.items[i]}</Button>
+            <span> {" " + props.items[i] + " ->"}</span>
         );
     }
     return (
@@ -46,7 +47,7 @@ function getAllMaxInMap(map) {
 }
 
 function Question(props) {
-    const [breadcrumb = "Start", setBreadcrumb] = React.useState("Start");
+    const [breadcrumb = "Start ->", setBreadcrumb] = React.useState("Start");
     const breadcrumbs_list = breadcrumb.split('|');
     const [breadCrumbHistory, setBreadCrumbHistory] = React.useState(new Map(breadcrumbs_list.map(obj => [obj, null])));
     const [questions] = React.useState(props.questions);
