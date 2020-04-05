@@ -5,6 +5,19 @@ import {Button} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Question from "./Question";
+import Rating from '@material-ui/lab/Rating';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import TextField from '@material-ui/core/TextField';
+import { useTheme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
 
 function StarRating(props) {
     return (
@@ -16,14 +29,41 @@ function StarRating(props) {
     );
 }
 
+// const useStyles = makeStyles((theme) => ({
+//     paper: {
+//         padding: theme.spacing(2),
+//         textAlign: 'center',
+//         color: theme.palette.text.secondary,
+//         spacing: 10,
+//     },
+// }));
+
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-        spacing: 10,
+    root: {
+      display: 'flex',
+      maxWidth: '500px',
     },
-}));
+    details: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    content: {
+      flex: '1 0 auto',
+    },
+    cover: {
+      width: 151,
+    },
+    controls: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingLeft: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+    },
+    playIcon: {
+      height: 38,
+      width: 38,
+    },
+  }));
 
 
 function googleLogin() {
@@ -81,6 +121,12 @@ function googleLogout() {
 }
 
 function Answer(props) {
+    
+    const classes = useStyles();
+    const theme = useTheme();
+
+    const [ratingValue, setRatingValue] = React.useState(2);
+    const [commentValue, setCommentValue] = React.useState("Any feedback is welcome!");
     const [ratings] = React.useState(props.ratings);
     const [comments, setComments] = React.useState(null);
 
@@ -91,7 +137,7 @@ function Answer(props) {
     const [hideButton, setHideButton] = React.useState(null);
     const [restartApp, setRestart] = React.useState(false);
 
-    const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("user") == null);
+    const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("user") !== null);
 
     function loadComments(appID, key) {
         firebase
@@ -109,7 +155,9 @@ function Answer(props) {
     return (<>
             {restartApp ? <Question questions={questions} communicators={allCommunicators}/> :
                 <div>
-                    <p>Your answer n-boy</p>
+                    {localStorage.getItem("displayName")!==null && <p>The best solution for {localStorage.getItem("displayName")}!</p>}
+                    {localStorage.getItem("displayName")===null && <p>The best solution for You!</p>}
+                    
 
                     {loggedIn === false && <button onClick={() => {
                         setHideButton(null);
@@ -124,17 +172,75 @@ function Answer(props) {
                     {communicators.map((communicator, key) => {
                         return (
                             <div key={key}>
-                                <p>name: {communicator.name}</p>
-                                <StarRating rating={ratings[communicator.id]}/>
+                                <Card className={classes.root}>
+                                    <div className={classes.details}>
+                                        <CardContent className={classes.content}>
+                                            <Typography component="h5" variant="h5">
+                                                {communicator.name}
+                                            </Typography>
+                                            <Typography variant="subtitle1" color="textSecondary">
+                                                {communicator.description}
+                                            </Typography>
+                                        </CardContent>
+                                        <div className={classes.controls}>
+                                            {/*<StarRating rating={ratings[communicator.id]}/>*/}
+                                            <StarRating rating={4}/>
+                                        </div>
+                                    </div>
+                                    <CardMedia
+                                        className={classes.cover}
+                                        image="https://www.tabletowo.pl/wp-content/uploads/2019/07/slack.jpg"
+                                    />
+                                </Card>
                                 {hideButton !== key &&
-                                <button onClick={() => loadComments(communicator.id, key)}>load comments</button>}
+                                <Button onClick={() => loadComments(communicator.id, key)}>show comments</Button>}
+                                {hideButton === key &&
+                                <Button onClick={() => setHideButton(null)}>hide comments</Button>}
                                 {hideButton === key && comments != null && comments.map((comment, key2) => {
-                                    return (<p key={key2}>{comment.text}</p>)
+                                    return (<div><TextField
+                                        disabled
+                                        id="filled-disabled"
+                                        label={<Chip
+                                            size="small"
+                                            avatar={<Avatar alt=" " src={comment.photoURL} />}
+                                            label={comment.displayName}
+                                        />}
+                                        defaultValue={comment.text}
+                                        variant="filled"
+                                      /><Rating
+                                      readOnly
+                                      name="simple-controlled"
+                                      value={comment.rating}
+                                  /></div>)
                                 })}
                                 {localStorage.getItem("user") != null && hideButton === key &&
-                                <button onClick={() => addComment(communicator, 4, "lol")}>submit rating</button>}
-                                {hideButton === key &&
-                                <button onClick={() => setHideButton(null)}>hide comments</button>}
+                                <span>
+                                    <TextField
+                                        id="outlined-helperText"
+                                        label={<Chip
+                                            size="small"
+                                            avatar={<Avatar alt=" " src={localStorage.getItem("photoURL")} />}
+                                            label={localStorage.getItem("displayName")}
+                                        />}
+                                        helperText="your comment"
+                                        variant="outlined"
+                                        value={commentValue}
+                                        onChange={(event,newValue)=>{
+                                            setCommentValue(newValue);
+                                        }}
+                                        />
+                                        <div>
+                                        <div><Rating
+                                            name="simple-controlled"
+                                            value={ratingValue}
+                                            onChange={(event, newValue) => {
+                                                setRatingValue(newValue);
+                                                }}
+                                        /></div><div><Button onClick={() => addComment(communicator, ratingValue, commentValue)} variant="contained">submit rating</Button>
+                                        </div>
+                                    </div>
+                                </span>}
+                                
                             </div>)
                     })}
 
