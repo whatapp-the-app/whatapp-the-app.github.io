@@ -6,14 +6,14 @@ import 'firebase/analytics'
 
   // Your web app's Firebase configuration
   var firebaseConfig = {
-    apiKey: "AIzaSyAd1UaiWOZXfYg_Vb_0L3n_VeZCV4JjyLQ",
-    authDomain: "what-the-app-73a85.firebaseapp.com",
-    databaseURL: "https://what-the-app-73a85.firebaseio.com",
-    projectId: "what-the-app-73a85",
-    storageBucket: "what-the-app-73a85.appspot.com",
-    messagingSenderId: "997468355625",
-    appId: "1:997468355625:web:ac77dadcf147fc7f497038",
-    measurementId: "G-RMV2RJ41NZ"
+    apiKey: "AIzaSyDxeTIq_1J_XJ5poYoXK9nuxiRxTFnrC9I",
+    authDomain: "what-app-77240.firebaseapp.com",
+    databaseURL: "https://what-app-77240.firebaseio.com",
+    projectId: "what-app-77240",
+    storageBucket: "what-app-77240.appspot.com",
+    messagingSenderId: "67822593873",
+    appId: "1:67822593873:web:4aaf3452ac221c6a04d570",
+    measurementId: "G-QHM3RGZVZZ"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);

@@ -72,12 +72,10 @@ function googleLogin() {
     firebase.auth().signInWithPopup(provider).then(result => {
 
         const user = result.user;
-        console.log(user.displayName)
         localStorage.setItem("user", user);
         localStorage.setItem("displayName", user.displayName);
         localStorage.setItem("photoUrl", user.photoURL);
-        console.log(user)
-        alert("hello " + user.displayName);
+        alert("welcome " + user.displayName);
     })
 }
 
@@ -96,8 +94,7 @@ function addComment(communicator, rating, text) {
                     rating: rating,
                     text: text,
                     displayName: localStorage.getItem("displayName"),
-                    photoURL: localStorage.getItem("photoUrl"),
-                    timestamp: Date.now()
+                    photoURL: localStorage.getItem("photoUrl")
                 })
             } else {
                 firebase.firestore().collection('comments').add({
@@ -111,8 +108,6 @@ function addComment(communicator, rating, text) {
             }
 
         });
-    console.log(localStorage.getItem("displayName"));
-    console.log(localStorage.getItem("photoUrl"))
 }
 
 function googleLogout() {
@@ -159,16 +154,16 @@ function Answer(props) {
                     {localStorage.getItem("displayName")===null && <p>The best solution for You!</p>}
                     
 
-                    {loggedIn === false && <button onClick={() => {
+                    {loggedIn === false && <Button variant="contained" onClick={() => {
                         setHideButton(null);
                         setLoggedIn(true);
                         googleLogin()
-                    }}>log in to leave a comment</button>}
+                    }}>log in to leave a rating</Button>}
 
-                    {loggedIn && <button onClick={() => {
+                    {loggedIn && <Button variant="contained" onClick={() => {
                         setLoggedIn(false);
                         googleLogout()
-                    }}>log out</button>}
+                    }}>log out</Button>}
                     {communicators.map((communicator, key) => {
                         return (
                             <div key={key}>
@@ -179,12 +174,11 @@ function Answer(props) {
                                                 {communicator.name}
                                             </Typography>
                                             <Typography variant="subtitle1" color="textSecondary">
-                                                {communicator.description}
+                                            {Math.round(ratings[communicator.id] * 100) / 100}
                                             </Typography>
                                         </CardContent>
                                         <div className={classes.controls}>
-                                            {/*<StarRating rating={ratings[communicator.id]}/>*/}
-                                            <StarRating rating={4}/>
+                                            <StarRating rating={ratings[communicator.id]}/>
                                         </div>
                                     </div>
                                     <CardMedia
@@ -224,19 +218,21 @@ function Answer(props) {
                                         />}
                                         helperText="your comment"
                                         variant="outlined"
-                                        value={commentValue}
-                                        onChange={(event,newValue)=>{
-                                            setCommentValue(newValue);
+                                        defaultValue={commentValue}
+                                        onChange={(event)=>{
+                                            setCommentValue(event.target.value);
                                         }}
-                                        />
+                                        on
+                                        /><Rating
+                                        name="simple-controlled"
+                                        value={ratingValue}
+                                        precision={0.5}
+                                        onChange={(event, newValue) => {
+                                            setRatingValue(newValue);
+                                            }}
+                                    />
                                         <div>
-                                        <div><Rating
-                                            name="simple-controlled"
-                                            value={ratingValue}
-                                            onChange={(event, newValue) => {
-                                                setRatingValue(newValue);
-                                                }}
-                                        /></div><div><Button onClick={() => addComment(communicator, ratingValue, commentValue)} variant="contained">submit rating</Button>
+                                        <div></div><div><Button onClick={() =>{addComment(communicator, ratingValue, commentValue)}} variant="contained">submit rating</Button>
                                         </div>
                                     </div>
                                 </span>}
@@ -244,7 +240,7 @@ function Answer(props) {
                             </div>)
                     })}
 
-                    <button onClick={() => setRestart(true)}>Let's try again...</button>
+                    <Button variant="contained" onClick={() => setRestart(true)}>Let's try again...</Button>
                 </div>}
         </>
     )
