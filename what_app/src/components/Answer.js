@@ -29,42 +29,14 @@ function StarRating(props) {
     );
 }
 
-// const useStyles = makeStyles((theme) => ({
-//     paper: {
-//         padding: theme.spacing(2),
-//         textAlign: 'center',
-//         color: theme.palette.text.secondary,
-//         spacing: 10,
-//     },
-// }));
-
 const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-      maxWidth: '500px',
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        spacing: 10,
     },
-    details: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      flex: '1 0 auto',
-    },
-    cover: {
-      width: 151,
-    },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    playIcon: {
-      height: 38,
-      width: 38,
-    },
-  }));
-
+}));
 
 function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -149,96 +121,90 @@ function Answer(props) {
     }
 
     return (<>
-    
-            {restartApp ? <Question questions={questions} communicators={allCommunicators}/> :
-                <div>
-                    {localStorage.getItem("displayName")!==null && <p>The best solution for {localStorage.getItem("displayName")}!</p>}
-                    {localStorage.getItem("displayName")===null && <p>The best solution for You!</p>}
-                    
+            <Grid container class={classes.paper}>
+                {restartApp ? <Question questions={questions} communicators={allCommunicators}/> :
+                    <Grid item xs={12}>
+                        {localStorage.getItem("displayName")!==null && <p>The best solution for {localStorage.getItem("displayName")}!</p>}
+                        {localStorage.getItem("displayName")===null && <p>The best solution for You!</p>}
+                        
+                        {loggedIn === false && <Button variant="contained" onClick={() => {setHideButton(null);setLoggedIn(true);googleLogin()}}>log in to leave a rating</Button>}
+                        {loggedIn && <Button variant="contained" onClick={() => {setLoggedIn(false);googleLogout()}}>log out</Button>}
+                        
+                        {communicators.map((communicator, key) => {
+                            return (<>
+                                <Grid item xs={12}>
+                                    <div key={key}>
+                                        <Grid container class={classes.paper}>
+                                            <Grid item xs={12}>
+                                                <h1>{communicator.name}</h1>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                            <img height="100"src={communicator.name + ".png"}></img>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <StarRating size="35px" rating={ratings[communicator.id]}/>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <p>{Math.round(ratings[communicator.id] * 100) / 100}</p>
+                                            </Grid>
+                                        </Grid>
+                                   
+                                        {hideButton !== key && <Button onClick={() => loadComments(communicator.id, key)}>show comments</Button>}
+                                        {hideButton === key && <Button onClick={() => setHideButton(null)}>hide comments</Button>}
+                                        
+                                        {hideButton === key && comments != null && comments.map((comment, key2) => {
+                                            return (
+                                                <Grid container class={classes.paper}>
+                                                    <Grid item xs={12}>
+                                                        <h5>{comment.displayName}</h5>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Avatar alt=" " src={comment.photoURL} style={{margin: "0 auto 10px"}}/>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Rating readOnly name="simple-controlled" value={comment.rating} />
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <p>{comment.text}</p>
+                                                    </Grid>
+                                                </Grid>
+                                                )
+                                        })}
 
-                    {loggedIn === false && <Button variant="contained" onClick={() => {
-                        setHideButton(null);
-                        setLoggedIn(true);
-                        googleLogin()
-                    }}>log in to leave a rating</Button>}
-
-                    {loggedIn && <Button variant="contained" onClick={() => {
-                        setLoggedIn(false);
-                        googleLogout()
-                    }}>log out</Button>}
-                    {communicators.map((communicator, key) => {
-                        return (
-                            <div key={key}>><Card className={classes.root}>
-                                    <div className={classes.details}>
-                                        <CardContent className={classes.content}>
-                                            <Typography component="h5" variant="h5">
-                                                {communicator.name}
-                                            </Typography>
-                                            <Typography variant="subtitle1" color="textSecondary">
-                                            {Math.round(ratings[communicator.id] * 100) / 100}
-                                            </Typography>
-                                        </CardContent>
-                                        <div className={classes.controls}>
-                                            <StarRating rating={ratings[communicator.id]}/>
+                                        {localStorage.getItem("user") != null && hideButton === key &&
+                                        <Grid container class={classes.paper}>
+                                            <Grid item xs={12}>
+                                                <h5>{localStorage.getItem("displayName")}</h5>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Avatar alt=" " src={localStorage.getItem("photoURL")} style={{margin: "0 auto 10px"}}/>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Rating name="simple-controlled" value={ratingValue} onChange={(event, newValue) => {setRatingValue(newValue);}}/>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <TextField 
+                                                    id="outlined-full-width"
+                                                    label="Your Comment"
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    style={{ margin: "10px" }}
+                                                    onChange={(event)=>{
+                                                        setCommentValue(event.target.value);
+                                                    }}
+                                                />
+                                            </Grid>   
+                                            <Grid item xs={12}>
+                                                <Button onClick={() =>{addComment(communicator, ratingValue, commentValue)}} variant="contained">submit rating</Button>
+                                            </Grid>    
+                                        </Grid>}
                                         </div>
-                                    </div>
-                                    <img height="100"src={communicator.name + ".png"}></img>
-                                </Card>
-                                {hideButton !== key &&
-                                <Button onClick={() => loadComments(communicator.id, key)}>show comments</Button>}
-                                {hideButton === key &&
-                                <Button onClick={() => setHideButton(null)}>hide comments</Button>}
-                                {hideButton === key && comments != null && comments.map((comment, key2) => {
-                                    return (<div><TextField
-                                        disabled
-                                        id="filled-disabled"
-                                        label={<Chip
-                                            size="small"
-                                            avatar={<Avatar alt=" " src={comment.photoURL} />}
-                                            label={comment.displayName}
-                                        />}
-                                        defaultValue={comment.text}
-                                        variant="filled"
-                                      /><Rating
-                                      readOnly
-                                      name="simple-controlled"
-                                      value={comment.rating}
-                                  /></div>)
-                                })}
-                                {localStorage.getItem("user") != null && hideButton === key &&
-                                <span>
-                                    <TextField
-                                        id="outlined-helperText"
-                                        label={<Chip
-                                            size="small"
-                                            avatar={<Avatar alt=" " src={localStorage.getItem("photoURL")} />}
-                                            label={localStorage.getItem("displayName")}
-                                        />}
-                                        helperText="your comment"
-                                        variant="outlined"
-                                        defaultValue={commentValue}
-                                        onChange={(event)=>{
-                                            setCommentValue(event.target.value);
-                                        }}
-                                        on
-                                        /><Rating
-                                        name="simple-controlled"
-                                        value={ratingValue}
-                                        onChange={(event, newValue) => {
-                                            setRatingValue(newValue);
-                                            }}
-                                    />
-                                        <div>
-                                        <div></div><div><Button onClick={() =>{addComment(communicator, ratingValue, commentValue)}} variant="contained">submit rating</Button>
-                                        </div>
-                                    </div>
-                                </span>}
-                                
-                            </div>)
-                    })}
+                                    </Grid></>)
+                        })}
 
                     <Button variant="contained" onClick={() => setRestart(true)}>Let's try again...</Button>
-                </div>}
+                </Grid>}
+            </Grid>
         </>
     )
 
